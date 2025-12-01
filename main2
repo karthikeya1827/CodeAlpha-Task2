@@ -1,0 +1,41 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, roc_auc_score, confusion_matrix
+
+print("--- Loading Data ---")
+df = pd.read_csv('german.csv', sep=';')   # <-- FIXED
+
+print("Columns:", df.columns.tolist())
+
+print("--- Preprocessing ---")
+
+# Target column is 'Creditability'
+y = df['Creditability']   # already numeric (0/1)
+X = df.drop('Creditability', axis=1)
+
+# One-hot encode categorical features
+X = pd.get_dummies(X, drop_first=True)
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print("--- Training Classification Model ---")
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+print("--- Results ---")
+y_pred = model.predict(X_test)
+y_prob = model.predict_proba(X_test)[:, 1]
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+roc = roc_auc_score(y_test, y_prob)
+print(f"ROC-AUC Score: {roc:.4f}")
+
+print("\nTop Risk Factors:")
+importances = pd.Series(model.feature_importances_, index=X.columns)
+print(importances.nlargest(5))
