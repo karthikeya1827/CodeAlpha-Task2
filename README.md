@@ -67,14 +67,17 @@ Train Accuracy ↑ steadily, Validation Accuracy stabilizes around ~80% after ~4
 - `kagglehub` for dataset download
 
 ---
+
 ## 🚀 How to Run
 1. Clone the repo  
 2. Install dependencies:  
    ```bash
    pip install -r requirements.txt
 
-3. Run Using
-   python credit_scoring.py
+3. Run using:
+   ```bash
+   python emotion_recognition.py
+
    
 
 
